@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student - Login & Signup</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --secondary: #ffd700;
+        --bg-light: #f9fff6;
+        --text-dark: #2c2c2c;
+        --neutral: #e5e5e5;
+        --highlight: #d72638;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        background: var(--bg-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Floating doodles */
+      .bg-food {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        animation: float 6s ease-in-out infinite;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        z-index: 0;
+      }
+      .bg-food:hover {
+        transform: scale(1.15) rotate(5deg);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      }
+      .pizza {
+        top: 5%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+      .burger {
+        bottom: 8%;
+        right: 12%;
+        animation-delay: 1s;
+      }
+      .fanta {
+        top: 20%;
+        right: 8%;
+        animation-delay: 2s;
+      }
+      .coffeee {
+        bottom: 15%;
+        left: 8%;
+        animation-delay: 3s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-15px) rotate(5deg);
+        }
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+      }
+
+      .wrapper {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 700px;
+      }
+
+      .card {
+        background: #fff;
+        width: 320px;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.7s ease, opacity 0.7s ease;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        left: -80px;
+        width: 200px;
+        height: 200px;
+        background: var(--secondary);
+        border-radius: 50%;
+        z-index: 0;
+      }
+
+      h2 {
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 2;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: var(--text-dark);
+      }
+      .input-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--neutral);
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.3s;
+        z-index: 2;
+        position: relative;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      .btn:hover {
+        background: #3e8e41;
+      }
+
+      .btn.back {
+        background: #555;
+        margin-top: 15px;
+      }
+      .btn.back:hover {
+        background: #333;
+      }
+
+      .toggle-text {
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--text-dark);
+        text-align: center;
+      }
+      .toggle-text a {
+        color: var(--highlight);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      /* Smooth toggle animation */
+      .signup {
+        transform: translateX(400px);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .show-signup {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      @media (max-width: 900px) {
+        .wrapper {
+          flex-direction: column;
+          align-items: center;
+        }
+        .signup {
+          transform: translateX(0);
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating doodles -->
+    <img src="../static/images/fanta.png" class="bg-food fanta" alt="fanta" />
+    <img src="../static/images/pizza.png" class="bg-food pizza" alt="pizza" />
+    <img
+      src="../static/images/coffeee.png"
+      class="bg-food coffeee"
+      alt="coffee" />
+    <img
+      src="../static/images/burger.png"
+      class="bg-food burger"
+      alt="burger" />
+
+    <div class="wrapper">
+      <!-- Login Card -->
+      <div class="card login">
+        <h2>Login</h2>
+        <form
+          action="{{ url_for('student_account') }}"
+          method="POST"
+          name="login">
+          <div class="input-group">
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Enter your phone number"
+              maxlength="10"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              required />
+          </div>
+          <button class="btn" type="submit" name="login">Login</button>
+        </form>
+        <p class="toggle-text">
+          Don’t have an account? <a href="#" id="showSignup">Sign Up</a>
+        </p>
+        <a href="{{ url_for('index') }}" class="btn back">⬅ Back to Home</a>
+      </div>
+
+      <!-- Signup Card -->
+      <div class="card signup">
+        <h2>Sign Up</h2>
+        <form
+          action="{{ url_for('student_account') }}"
+          method="POST"
+          name="signup">
+          <div class="input-group">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Enter your phone number"
+              maxlength="10"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create password"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="confirm_password"
+              placeholder="Confirm password"
+              required />
+          </div>
+          <button class="btn" type="submit" name="signup">Sign Up</button>
+        </form>
+        <p class="toggle-text">
+          Already have an account? <a href="#" id="showLogin">Login</a>
+        </p>
+        <a href="{{ url_for('index') }}" class="btn back">⬅ Back to Home</a>
+      </div>
+    </div>
+
+    <script>
+      const loginCard = document.querySelector(".login");
+      const signupCard = document.querySelector(".signup");
+      document.getElementById("showSignup").addEventListener("click", (e) => {
+        e.preventDefault();
+        loginCard.classList.add("signup");
+        signupCard.classList.add("show-signup");
+      });
+      document.getElementById("showLogin").addEventListener("click", (e) => {
+        e.preventDefault();
+        loginCard.classList.remove("signup");
+        signupCard.classList.remove("show-signup");
+      });
+    </script>
+  </body>
+</html>

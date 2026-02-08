@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+        background-color: #F9FFF6;
+        color: #2C2C2C;
+        display: flex;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 200px;
+        background: linear-gradient(180deg, #4CAF50, #388E3C);
+        color: white;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .sidebar h2 {
+        margin-bottom: 30px;
+        font-size: 20px;
+        text-align: center;
+      }
+      .sidebar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 12px;
+        margin: 8px 0;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: transform 0.16s ease, background 0.16s ease;
+      }
+      /* 1) sidebar hover fix */
+      .sidebar a:hover {
+        background: rgba(255,255,255,0.12);
+        transform: translateX(6px);
+        color: white;
+      }
+
+      /* Main content */
+      .main {
+        flex: 1;
+        padding: 20px;
+      }
+
+      .welcome { margin-bottom: 18px; }
+
+      .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid #E5E5E5;
+      }
+
+      .container {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid #E5E5E5;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+      }
+      th {
+        background: #ff7b00;
+        color: white;
+      }
+      tr {
+        border-bottom: 1px solid #E5E5E5;
+      }
+
+      .status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .pending { background-color: #FFD700; color: #2C2C2C; }
+      .confirmed { background: #ff7b00; }
+      .ready { background-color: #2C2C2C; }
+      .cancelled { background-color: #D72638; }
+
+      /* Flash (top-right) */
+      #flash-container { position: fixed; top: 16px; right: 16px; z-index: 9999; }
+      .flash {
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        font-weight: 600;
+      }
+      .flash.success { background: #d4edda; color: #155724; }
+      .flash.warning { background: #fff3cd; color: #856404; }
+      .flash.danger { background: #f8d7da; color: #721c24; }
+
+      .countdown-card {
+        background: white;
+        padding: 18px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      }
+
+      @media (max-width: 900px) {
+        .dashboard-cards { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 768px) {
+        body { flex-direction: column; }
+        .sidebar { width: 100%; display: flex; justify-content: space-around; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>🎓 student panel</h2>
+      <a href="{{ url_for('menu') }}">🍽 Menu</a>
+      <a href="{{ url_for('order') }}">🛒 Cart</a>
+      <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+
+    <div class="main">
+      <!-- Flash container -->
+      <div id="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for cat,msg in messages %}
+              <div class="flash {{ cat }}">{{ msg }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="welcome">
+        <h1>Welcome, {{ name }} 🎉</h1>
+      </div>
+
+      <!-- Countdown (minutes-only) -->
+      {% if next_confirmed %}
+        <div class="countdown-card" id="countdownCard">
+          <h3>Next Pickup</h3>
+          <p>Order #{{ next_confirmed.id }} — Pickup at <strong>{{ next_confirmed.pickup_time }}</strong></p>
+          <p>Time left: <span id="countdownTimer">calculating...</span></p>
+        </div>
+      {% endif %}
+
+      <div class="dashboard-cards">
+        <div class="card">
+          <h3>{{ orders|length }}</h3>
+          <p>My Orders</p>
+        </div>
+        <div class="card">
+          <h3>{{ orders|selectattr("status","equalto","Pending")|list|length }}</h3>
+          <p>Pending Orders</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <h2>My Recent Orders</h2>
+        <table>
+          <tr><th>Order ID</th><th>Items</th><th>Total</th><th>Pickup Time</th><th>Status</th></tr>
+          {% for o in orders %}
+            <tr>
+              <td>#{{ o.id }}</td>
+              <td>{{ o.items or '—' }}</td>
+              <td>₹{{ o.total_amount }}</td>
+              <td>{{ o.pickup_time or '—' }}</td>
+              <td>
+                <span class="status {% if o.status=='Pending' %}pending{% elif o.status=='Confirmed' %}confirmed{% elif o.status=='Ready' %}ready{% else %}cancelled{% endif %}">
+                  {{ o.status }}
+                </span>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" style="text-align:center;color:gray">No orders yet</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    {% if next_confirmed %}
+    <script>
+      // 3) Countdown shows minutes-only (rounded up) and updates live.
+      (function(){
+        const pickupRaw = "{{ next_confirmed.pickup_time|e }}"; // 'YYYY-MM-DD HH:MM:SS'
+        const pickupIso = pickupRaw.replace(' ', 'T'); // parse as local
+        const pickupDate = new Date(pickupIso);
+        const timerEl = document.getElementById("countdownTimer");
+
+        function updateMinutesOnly() {
+          const now = new Date();
+          let diffSec = Math.floor((pickupDate - now) / 1000);
+          if (isNaN(diffSec)) {
+            timerEl.textContent = "Invalid pickup time";
+            return;
+          }
+          if (diffSec <= 0) {
+            timerEl.textContent = "⏰ Pickup time reached — Go collect your order!";
+            return;
+          }
+          // show minutes only (round up so 61s => 1 min)
+          const minutesLeft = Math.ceil(diffSec / 60);
+          timerEl.textContent = minutesLeft + " min";
+        }
+
+        updateMinutesOnly();
+        setInterval(updateMinutesOnly, 1000);
+
+        // 4) quick fade for flash messages
+        const flashes = document.querySelectorAll("#flash-container .flash");
+        flashes.forEach((el, idx) => {
+          const showDuration = 1200 + (idx * 160);
+          setTimeout(() => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(-8px)";
+            setTimeout(() => el.remove(), 360);
+          }, showDuration);
+        });
+      })();
+    </script>
+    {% endif %}
+  </body>
+</html>
