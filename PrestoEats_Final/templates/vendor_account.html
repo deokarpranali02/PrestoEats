@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vendor - Login & Signup</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --secondary: #ffd700;
+        --bg-light: #ffffff;
+        --text-dark: #2c2c2c;
+        --neutral: #e5e5e5;
+        --highlight: #d72638;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        background: var(--bg-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      .wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 700px;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        z-index: 1;
+      }
+
+      .card {
+        background: white;
+        width: 320px;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.5s ease;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        left: -80px;
+        width: 200px;
+        height: 200px;
+        background: var(--secondary);
+        border-radius: 50%;
+        z-index: 0;
+      }
+
+      h2 {
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+      }
+      .input-group label {
+        font-size: 14px;
+        color: var(--text-dark);
+        margin-bottom: 5px;
+        display: block;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--neutral);
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.3s;
+        position: relative;
+        z-index: 1;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      .btn:hover {
+        background: #3e8e41;
+      }
+
+      .btn.back {
+        background: #555;
+        margin-top: 15px;
+      }
+      .btn.back:hover {
+        background: #333;
+      }
+
+      .toggle-text {
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--text-dark);
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+      .toggle-text a {
+        color: var(--highlight);
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      /* Smooth toggle animation */
+      .signup {
+        transform: translateX(400px);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .show-signup {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      @media (max-width: 900px) {
+        .wrapper {
+          flex-direction: column;
+          align-items: center;
+        }
+        .signup {
+          transform: translateX(0);
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .floating {
+          width: 100px;
+        }
+      }
+
+      /* Floating images */
+      .floating {
+        position: absolute;
+        width: 150px;
+        animation: float 6s ease-in-out infinite;
+        opacity: 0.9;
+        z-index: 0;
+      }
+      .top-left {
+        top: 5%;
+        left: 5%;
+        animation-delay: 0s;
+      }
+      .top-right {
+        top: 5%;
+        right: 5%;
+        animation-delay: 2s;
+      }
+      .bottom-left {
+        bottom: 5%;
+        left: 5%;
+        animation-delay: 4s;
+      }
+      .bottom-right {
+        bottom: 5%;
+        right: 5%;
+        animation-delay: 6s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating images -->
+    <img
+      src="{{ url_for('static', filename='images/vendor.png') }}"
+      alt="Vendor"
+      class="floating top-left" />
+    <img
+      src="{{ url_for('static', filename='images/foodv.png') }}"
+      alt="Food"
+      class="floating top-right" />
+    <img
+      src="{{ url_for('static', filename='images/canteenv.png') }}"
+      alt="Canteen"
+      class="floating bottom-left" />
+    <img
+      src="{{ url_for('static', filename='images/vendor2.png') }}"
+      alt="Vendor2"
+      class="floating bottom-right" />
+
+    <div class="wrapper">
+      <!-- Login Card -->
+      <div class="card login">
+        <h2>Vendor Login</h2>
+        <form action="{{ url_for('vendor_account') }}" method="POST">
+          <div class="input-group">
+            <label>Username</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Enter vendor username"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              required />
+          </div>
+          <button class="btn" type="submit" name="login">Login</button>
+        </form>
+        <p class="toggle-text">
+          Don’t have an account? <a href="#" id="showSignup">Sign Up</a>
+        </p>
+        <a href="{{ url_for('index') }}" class="btn back">⬅ Back to Home</a>
+      </div>
+
+      <!-- Signup Card -->
+      <div class="card signup">
+        <h2>Vendor Sign Up</h2>
+        <form action="{{ url_for('vendor_account') }}" method="POST">
+          <div class="input-group">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Username</label>
+            <input
+              type="text"
+              name="username"
+              placeholder="Enter username"
+              required />
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create password"
+              required />
+          </div>
+          <button class="btn" type="submit" name="signup">Sign Up</button>
+        </form>
+        <p class="toggle-text">
+          Already have an account? <a href="#" id="showLogin">Login</a>
+        </p>
+        <a href="{{ url_for('index') }}" class="btn back">⬅ Back to Home</a>
+      </div>
+    </div>
+
+    <script>
+      const loginCard = document.querySelector(".login");
+      const signupCard = document.querySelector(".signup");
+      document.getElementById("showSignup").addEventListener("click", () => {
+        loginCard.classList.add("signup");
+        signupCard.classList.add("show-signup");
+      });
+      document.getElementById("showLogin").addEventListener("click", () => {
+        loginCard.classList.remove("signup");
+        signupCard.classList.remove("show-signup");
+      });
+    </script>
+  </body>
+</html>
