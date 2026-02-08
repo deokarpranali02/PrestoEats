@@ -923,4 +923,4 @@ def admin_report_month():
 
  
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
