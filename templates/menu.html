@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link />
+    <style>
+      /* Dropdown styling */
+      nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        position: relative;
+      }
+
+      .dropdown {
+        position: relative;
+      }
+
+      .dropbtn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 180px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        z-index: 1;
+        top: 36px;
+      }
+
+      .dropdown-content a {
+        color: #2c2c2c;
+        padding: 10px 16px;
+        text-decoration: none;
+        display: block;
+        font-weight: 500;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ffd700;
+        color: #2c2c2c;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: #ffd700;
+        color: #2c2c2c;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>🍴 PrestoEats</h1>
+      <nav>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('menu') }}">Menu</a>
+        <a href="{{ url_for('order') }}">Order</a>
+
+        <!-- Account dropdown for roles -->
+        <div class="dropdown">
+          <button class="dropbtn">Account ▼</button>
+          <div class="dropdown-content">
+            <a href="{{ url_for('student_account') }}"
+              >Student Login / Signup</a
+            >
+            <a href="{{ url_for('vendor_account') }}">Vendor Login / Signup</a>
+            <a href="{{ url_for('admin_account') }}">Admin Login</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    {% for category in ['Special','Snacks','Fried Food','Healthy
+    Choices','Beverages'] %}
+    <section class="dishes">
+      <h2>
+        {% if category == 'Special' %}🍛 Today's Menu{% elif category ==
+        'Snacks' %}🥨 Snacks {% elif category == 'Fried Food' %}🍟 Fried Food {%
+        elif category == 'Healthy Choices' %}🥗 Healthy Choices {% elif category
+        == 'Beverages' %}🥤 Beverages {% endif %}
+      </h2>
+      <div class="dish-list">
+        {% for item in items %} {% if item['category'] == category %}
+        <div class="dish card">
+          <img
+            src="{{ url_for('static', filename='images/' ~ item['image']) }}"
+            alt="{{ item['name'] }}" />
+          <h3>{{ item['name'] }}</h3>
+          <p>₹{{ item['price'] }}</p>
+          <form method="POST" action="{{ url_for('menu') }}">
+            <input type="hidden" name="item_id" value="{{ item['id'] }}" />
+            <button type="submit" class="order-btn">Add to Cart</button>
+          </form>
+        </div>
+        {% endif %} {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+
+    <footer>
+      <p>© 2025 PrestoEats. Created By Students For Students!</p>
+    </footer>
+  </body>
+</html>

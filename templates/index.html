@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrestoEats</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+      /* Navbar Styling */
+      nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        position: relative;
+      }
+
+      .dropdown {
+        position: relative;
+      }
+
+      .dropbtn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 180px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        z-index: 1;
+        top: 36px;
+      }
+
+      .dropdown-content a {
+        color: #2c2c2c;
+        padding: 10px 16px;
+        text-decoration: none;
+        display: block;
+        font-weight: 500;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ffd700;
+        color: #2c2c2c;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: #ffd700;
+        color: #2c2c2c;
+      }
+
+      /* Cart icon (kept in case needed later) */
+      .cart-link {
+        font-weight: bold;
+        background: #ff5722;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+
+      .cart-link:hover {
+        background: #e64a19;
+      }
+
+      /* Live counter styling */
+      #visitor-counter {
+        font-weight: bold;
+        color: #ffd700;
+        margin-right: auto;
+      }
+
+      /* 🔥 Moving Welcome Banner */
+      .welcome-banner {
+        width: 100%;
+        overflow: hidden;
+        background: linear-gradient(90deg, #4caf50, #ff9800);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px 0;
+        position: relative;
+      }
+      .welcome-text {
+        display: inline-block;
+        white-space: nowrap;
+        animation: scroll-left 15s linear infinite;
+      }
+      @keyframes scroll-left {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>🍴 PrestoEats</h1>
+      <nav>
+        <span id="visitor-counter">👥 Live: {{ total_visitors }}</span>
+
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('menu') }}">Menu</a>
+        <a href="{{ url_for('order') }}">Order</a>
+
+        <!-- Account dropdown -->
+        <div class="dropdown">
+          <button class="dropbtn">Account ▼</button>
+          <div class="dropdown-content">
+            {% if session.get('user_id') %}
+            <a href="#">Welcome, {{ session.get('user_name', 'User') }}</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('student_account') }}"
+              >Student Login / Signup</a
+            >
+            <a href="{{ url_for('vendor_account') }}">Vendor Login / Signup</a>
+            <a href="{{ url_for('admin_account') }}">Admin Login</a>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- 🔥 Moving Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        ✨🍔 Welcome to PrestoEats 🍕🥗 Fresh Food, Fast Service ☕🍩 Eat First,
+        Lecture Later! ✨
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <img
+        src="{{ url_for('static', filename='images/dosa-doodle.jpg') }}"
+        alt="canteen"
+        class="doodle doodle1" />
+      <img
+        src="{{ url_for('static', filename='images/pavbhaji-doodle.jpg') }}"
+        alt="canteen2"
+        class="doodle doodle2" />
+      <img
+        src="{{ url_for('static', filename='images/vadapav-doodle.jpg') }}"
+        alt="canteen3"
+        class="doodle doodle3" />
+      <img
+        src="{{ url_for('static', filename='images/idli-doodle.jpg') }}"
+        alt="food2"
+        class="doodle doodle4" />
+
+      <div class="hero-content">
+        <h1>Your Next Meal is One Click Away!</h1>
+        <p>Eat First, Lecture Later</p>
+        <a href="{{ url_for('menu') }}" class="btn">🍽 Order Now</a>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+      <h2>About Us</h2>
+      <p>
+        Welcome to PrestoEats — your go-to spot for delicious, affordable meals
+        on campus. We serve everything from snacks to full meals, all freshly
+        prepared and ready when you are. Our mission is to make dining simple,
+        quick, and enjoyable for students and staff alike. Whether you’re
+        grabbing a tea between classes, enjoying a hearty lunch with friends, or
+        picking up something on the go, PrestoEats is here to keep you fueled
+        and satisfied every day.
+      </p>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section id="why-choose" class="section why-choose">
+      <h2>Why Choose Us?</h2>
+      <div class="features">
+        <div class="card">
+          <h3>⏱ Save Time</h3>
+          <p>No more waiting in long queues.</p>
+        </div>
+        <div class="card">
+          <h3>🥗 Fresh Food</h3>
+          <p>Hot & hygienic meals, always fresh for you.</p>
+        </div>
+        <div class="card">
+          <h3>📱 Easy to Use</h3>
+          <p>Order anytime, even during lectures.</p>
+        </div>
+        <div class="card">
+          <h3>💰 Affordable</h3>
+          <p>Pocket-friendly meals for every student.</p>
+        </div>
+      </div>
+
+      <div class="campus">
+        <h3>🌟 Campus Vibes</h3>
+        <p>Special food – cool choices!</p>
+        <div class="emoji-boxes">
+          <div class="emoji">🍔</div>
+          <div class="emoji">🍕</div>
+          <div class="emoji">🍜</div>
+          <div class="emoji">🥗</div>
+          <div class="emoji">🍩</div>
+          <div class="emoji">☕</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 PrestoEats. Created By Students For Students!</p>
+    </footer>
+
+    <script>
+      // Auto-refresh live counter
+      setInterval(() => {
+        fetch("/get_visitors")
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById("visitor-counter").innerText =
+              "👥 Live: " + data.count;
+          });
+      }, 5000);
+    </script>
+  </body>
+</html>

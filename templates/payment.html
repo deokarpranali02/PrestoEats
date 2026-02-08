@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>💳 Payment</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fafafa;
+        overflow-x: hidden;
+      }
+
+      /* Floating emojis */
+      .floating-emoji {
+        position: absolute;
+        font-size: 40px;
+        animation: float 22s linear infinite;
+        opacity: 0.7;
+      }
+      .floating-emoji:nth-child(1) {
+        top: 20%;
+        left: -10%;
+        animation-delay: 0s;
+      }
+      .floating-emoji:nth-child(2) {
+        top: 60%;
+        left: -15%;
+        animation-delay: 4s;
+      }
+      .floating-emoji:nth-child(3) {
+        top: 40%;
+        left: -20%;
+        animation-delay: 8s;
+      }
+      .floating-emoji:nth-child(4) {
+        top: 75%;
+        left: -18%;
+        animation-delay: 12s;
+      }
+
+      @keyframes float {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(120vw);
+        }
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 60px auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        position: relative;
+        z-index: 2;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2e7d32; /* Dark green */
+      }
+
+      .total {
+        text-align: center;
+        font-size: 20px;
+        margin-bottom: 25px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .option {
+        margin: 12px 0;
+      }
+
+      label {
+        font-weight: 600;
+        color: #444;
+      }
+
+      input[type="radio"] {
+        margin-right: 8px;
+      }
+
+      #upi-box {
+        margin-top: 12px;
+        display: none;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+
+      .btn-pay {
+        display: block;
+        width: 100%;
+        margin-top: 25px;
+        background: #4caf50; /* Green */
+        color: white;
+        padding: 14px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .btn-pay:hover {
+        background: #388e3c; /* Darker green on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating emojis -->
+    <div class="floating-emoji">🍔</div>
+    <div class="floating-emoji">🍕</div>
+    <div class="floating-emoji">🥤</div>
+    <div class="floating-emoji">👨‍🍳</div>
+
+    <div class="container">
+      <h1>💳 Payment</h1>
+      <div class="total">Total Amount: ₹{{ total_amount }}</div>
+
+      <form method="POST">
+        <div class="option">
+          <label>
+            <input type="radio" name="payment" value="cash" required /> 💵 Cash
+            on Delivery
+          </label>
+        </div>
+        <div class="option">
+          <label>
+            <input
+              type="radio"
+              name="payment"
+              value="upi"
+              required
+              onclick="showUpiBox()" />
+            📲 UPI Payment
+          </label>
+        </div>
+
+        <div id="upi-box">
+          <label for="upi_id">Enter UPI ID:</label>
+          <input
+            type="text"
+            id="upi_id"
+            name="upi_id"
+            placeholder="example@upi" />
+        </div>
+
+        <button type="submit" class="btn-pay">✅ Proceed Payment</button>
+      </form>
+    </div>
+
+    <script>
+      function showUpiBox() {
+        document.getElementById("upi-box").style.display = "block";
+      }
+    </script>
+  </body>
+</html>

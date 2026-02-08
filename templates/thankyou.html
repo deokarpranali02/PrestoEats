@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmation</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link />
+    <style>
+      body {
+        background: #ffffff; /* White background */
+        color: #333;
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      /* Floating emojis */
+      .floating-emoji {
+        position: absolute;
+        font-size: 40px;
+        animation: float 25s linear infinite;
+        opacity: 0.7;
+      }
+      .floating-emoji:nth-child(1) {
+        top: 15%;
+        left: -12%;
+        animation-delay: 0s;
+      }
+      .floating-emoji:nth-child(2) {
+        top: 40%;
+        left: -18%;
+        animation-delay: 6s;
+      }
+      .floating-emoji:nth-child(3) {
+        top: 70%;
+        left: -22%;
+        animation-delay: 12s;
+      }
+      .floating-emoji:nth-child(4) {
+        top: 55%;
+        left: -15%;
+        animation-delay: 18s;
+      }
+
+      @keyframes float {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(120vw);
+        }
+      }
+
+      .thankyou-container {
+        max-width: 800px;
+        margin: 50px auto;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .card {
+        background: #f9f9f9;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .order-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+      }
+      .item-img {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-right: 15px;
+      }
+      .order-summary {
+        text-align: left;
+        flex: 1;
+      }
+      .total-box {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-top: 20px;
+        text-align: right;
+        color: #27ae60;
+      }
+      .home-btn {
+        margin-top: 30px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #ff9f43, #27ae60);
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        display: inline-block;
+        transition: 0.3s;
+      }
+      .home-btn:hover {
+        background: linear-gradient(135deg, #e67e22, #2ecc71);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating emojis -->
+    <div class="floating-emoji">🍔</div>
+    <div class="floating-emoji">🍕</div>
+    <div class="floating-emoji">🥤</div>
+    <div class="floating-emoji">👨‍🍳</div>
+
+    <div class="container thankyou-container">
+      <h1 class="mb-3">🎉 Thank You!</h1>
+      <p class="lead">{{ message }}</p>
+      <div class="card">
+        <h4 class="mb-3">Order #{{ order_id }}</h4>
+        {% for item in ordered_items %}
+        <div class="order-item">
+          <img
+            src="{{ url_for('static', filename='images/' + (item.image if item.image else 'placeholder.jpg')) }}"
+            class="item-img"
+            alt="{{ item.name }}" />
+          <div class="order-summary">
+            <h6 class="mb-0">{{ item.name }}</h6>
+            <small>Quantity: {{ item.quantity }}</small><br />
+            <small>Price: ₹{{ item.price }}</small>
+          </div>
+          <strong>₹{{ item.total_price }}</strong>
+        </div>
+        {% endfor %}
+        <div class="total-box">Total: ₹{{ total_amount }}</div>
+      </div>
+      <a href="{{ url_for('student_dashboard') }}" class="home-btn"
+        >⬅ Go To Dashboard 🍴</a
+      >
+    </div>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>🛒 Your Order</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/Logo3.png') }}" />
+    <link />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fafafa;
+
+        /* Light emoji food background (wallpaper) */
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🍔</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🍕</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🍟</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🥗</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🥤</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🍩</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>🌮</text></svg>"),
+          url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><text y='50%' x='50%' text-anchor='middle' dominant-baseline='middle' font-size='24'>👨‍🍳</text></svg>");
+        background-size: 150px 150px;
+        background-repeat: repeat;
+        background-blend-mode: lighten;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Floating emojis */
+      .floating-emoji {
+        position: absolute;
+        font-size: 40px;
+        animation: float 18s linear infinite;
+        opacity: 0.7;
+      }
+      .floating-emoji:nth-child(1) {
+        top: 20%;
+        left: -10%;
+        animation-delay: 0s;
+      }
+      .floating-emoji:nth-child(2) {
+        top: 60%;
+        left: -15%;
+        animation-delay: 3s;
+      }
+      .floating-emoji:nth-child(3) {
+        top: 40%;
+        left: -20%;
+        animation-delay: 6s;
+      }
+
+      @keyframes float {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(120vw);
+        }
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        position: relative;
+        z-index: 2;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #e65100;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        background: #fafafa;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .cart-item img {
+        width: 100px;
+        height: 80px;
+        border-radius: 10px;
+        margin-right: 20px;
+        object-fit: cover;
+      }
+
+      .cart-item h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .cart-item p {
+        margin: 5px 0 0;
+        color: #555;
+      }
+
+      .actions button {
+        margin: 0 3px;
+        background: #d4edda; /* light green */
+        color: #000; /* black text/icons */
+        border: 1px solid #28a745;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .actions button:hover {
+        background: #a8e6a3;
+      }
+
+      .total {
+        text-align: right;
+        font-size: 20px;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+
+      .checkout {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .checkout a,
+      .back-btn {
+        display: inline-block;
+        background: #ff9800;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 5px;
+      }
+
+      .checkout a:hover,
+      .back-btn:hover {
+        background: #e68900;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating emojis -->
+    <div class="floating-emoji">🍔</div>
+    <div class="floating-emoji">🍕</div>
+    <div class="floating-emoji">🍟</div>
+
+    <div class="container">
+      <h1>🛒 Your Cart</h1>
+
+      {% for item in cart_items %}
+      <div class="cart-item">
+        <img
+          src="{{ url_for('static', filename='images/' ~ (item.image if item.image else 'placeholder.jpg')) }}"
+          alt="{{ item.name }}" />
+        <div>
+          <h3>{{ item.name }}</h3>
+          <p>
+            ₹{{ item.price }} × {{ item.quantity }} =
+            <b>₹{{ item.total_price }}</b>
+          </p>
+        </div>
+        <div class="actions">
+          <form method="POST" style="display: inline">
+            <input type="hidden" name="cart_id" value="{{ item.cart_id }}" />
+            <button name="action" value="increase">➕</button>
+            <button name="action" value="decrease">➖</button>
+            <button name="action" value="remove">❌</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="total">Total: ₹{{ total_amount }}</div>
+
+      <div class="checkout">
+        <a href="{{ url_for('menu') }}" class="back-btn">⬅ Back to Menu 🍴</a>
+        <a href="{{ url_for('payment') }}">Proceed to Payment 💳</a>
+      </div>
+    </div>
+  </body>
+</html>

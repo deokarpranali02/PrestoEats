@@ -1,0 +1,49 @@
+User Journey & Flow
+
+Student signs up / logs in
+
+Redirect to Student Dashboard
+
+Show Welcome XYZ at the top of the dashboard.
+
+Student browses Menu → adds items to Cart → places Order
+
+Order created in DB with:
+
+status = 'Pending'
+
+No pickup time yet (pickup_time = NULL)
+
+Redirect to Payment Page
+
+Once payment succeeds:
+
+Order remains Pending
+
+Vendor gets notified automatically (can fetch from DB or show in dashboard)
+
+Vendor receives Order
+
+See all pending orders
+
+For each order:
+
+Vendor sets Pickup Time
+
+Vendor can confirm order → this action sets:
+
+status = 'Confirmed'
+
+pickup_time = 'yyyy-mm-dd HH:MM:ss' (real time)
+
+Once vendor confirms, student gets countdown to pickup.
+
+Student sees live countdown card
+
+Only appears if there’s a confirmed order with a pickup time
+
+Timer counts down real-time to pickup.
+
+Once timer ends, message: "Go pick up your order!"
+
+At this stage, order status could change to Ready when picked up.
